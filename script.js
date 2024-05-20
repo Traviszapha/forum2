@@ -1,38 +1,58 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const postForm = document.getElementById('postForm');
-    const postsContainer = document.getElementById('postsContainer');
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('addPostButton').addEventListener('click', addPost);
+});
 
-    postForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+function addPost() {
+    const name = document.getElementById('name').value;
+    const post = document.getElementById('post').value;
 
-        const username = document.getElementById('username').value.trim();
-        const message = document.getElementById('message').value.trim();
+    if (name && post) {
+        const postsContainer = document.getElementById('posts');
 
-        if (username && message) {
-            const postElement = createPostElement(username, message);
-            postsContainer.prepend(postElement);
-
-            postForm.reset();
-        } else {
-            alert('Please enter both a username and a message.');
-        }
-    });
-
-    function createPostElement(username, message) {
         const postDiv = document.createElement('div');
         postDiv.classList.add('post');
 
-        const usernameDiv = document.createElement('div');
-        usernameDiv.classList.add('username');
-        usernameDiv.textContent = username;
+        const postHeader = document.createElement('h3');
+        postHeader.textContent = name;
 
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message');
-        messageDiv.textContent = message;s
+        const postContent = document.createElement('p');
+        postContent.textContent = post;
 
-        postDiv.appendChild(usernameDiv);
-        postDiv.appendChild(messageDiv);
+        const feedbackDiv = document.createElement('div');
+        feedbackDiv.classList.add('feedback');
 
-        return postDiv;
+        const replyForm = document.createElement('div');
+        replyForm.classList.add('reply-form');
+        const replyInput = document.createElement('input');
+        replyInput.setAttribute('type', 'text');
+        replyInput.setAttribute('placeholder', 'Host reply');
+        const replyButton = document.createElement('button');
+        replyButton.textContent = 'Reply';
+        replyButton.addEventListener('click', () => addReply(feedbackDiv, replyInput));
+
+        replyForm.appendChild(replyInput);
+        replyForm.appendChild(replyButton);
+
+        postDiv.appendChild(postHeader);
+        postDiv.appendChild(postContent);
+        postDiv.appendChild(feedbackDiv);
+        postDiv.appendChild(replyForm);
+
+        postsContainer.appendChild(postDiv);
+
+        document.getElementById('name').value = '';
+        document.getElementById('post').value = '';
+    } else {
+        alert('Please enter both your name and post.');
     }
-});
+}
+
+function addReply(feedbackDiv, replyInput) {
+    const replyText = replyInput.value;
+    if (replyText) {
+        feedbackDiv.textContent = "Sumeiya & Edgar: " + replyText;
+        replyInput.value = '';
+    } else {
+        alert('Please enter a reply.');
+    }
+}
